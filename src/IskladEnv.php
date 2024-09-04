@@ -8,6 +8,12 @@ use RuntimeException;
 final class IskladEnv
 {
     /**
+     * Parsed ini vars, (if this class is instantiated with an ini file).
+     * @see self::fromIniFile()
+     */
+    private array $ini = [];
+
+    /**
      * Url from which to fetch widget.
      */
     private string $widgetJsUrl;
@@ -101,6 +107,34 @@ final class IskladEnv
         }
     }
 
+    public static function fromIniFile(string $filename): self
+    {
+        $ini = parse_ini_file($filename, false, INI_SCANNER_TYPED);
+
+        $self = new self(
+            $ini['clientId'] ?? null,
+            $ini['clientSecret'] ?? null,
+            $ini['eshopId'] ?? null,
+            $ini['dataDir'] ?? null,
+            $ini['widgetJsUrl'] ?? null,
+            $ini['clientTokenUrl'] ?? null,
+            $ini['iskladApiDeviceIdentityRequestUrl'] ?? null,
+            $ini['myorderDomain'] ?? null,
+            $ini['keyDeviceId'] ?? null,
+            $ini['keyDeviceIdentityRequestId'] ?? null,
+            $ini['keyCsrfToken'] ?? null,
+            $ini['displayErrors'] ?? null,
+        );
+        $self->ini = $ini;
+
+        return $self;
+    }
+
+    public function getIni(): array
+    {
+        return $this->ini;
+    }
+
     /**
      * URL target for redirect with provided device id.
      *
@@ -126,7 +160,7 @@ final class IskladEnv
 
     public function getWidgetJsUrl(): string
     {
-        return sprintf($this->widgetJsUrl,);
+        return $this->widgetJsUrl;
     }
 
     public function getClientId(): string
