@@ -15,7 +15,7 @@ final class ApiClient
   public function __construct(IskladEnv $env)
   {
     $this->env = $env;
-    $this->clientTokenStorage = new ClientTokenStorage();
+    $this->clientTokenStorage = new ClientTokenStorage($env);
     $this->clientToken = $this->getClientToken();
   }
 

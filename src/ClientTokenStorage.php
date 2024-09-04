@@ -7,21 +7,30 @@ use RuntimeException;
 
 final class ClientTokenStorage
 {
-  /**
+    private IskladEnv $env;
+
+    public function __construct(IskladEnv $env)
+    {
+        $this->env = $env;
+    }
+
+    /**
    * @return array{access_token:string, expire_at:string}
    */
   public function getSavedTokenDto(): array
   {
     $tokenDto = ['access_token' => '', 'expire_at' => '1 year ago'];
     $filename = $this->getClientTokenFilename();
-    require $filename;
+    if (file_exists($filename)) {
+        require $filename;
+    }
 
     return $tokenDto;
   }
 
   private function getClientTokenFilename(): string
   {
-    return __DIR__ . '/data/ClientToken.php';
+    return $this->env->getDataDir() . '/ClientToken.php';
   }
 
   /**

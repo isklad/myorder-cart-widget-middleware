@@ -61,10 +61,16 @@ final class IskladEnv
      */
     private string $myorderDomain;
 
+    /**
+     * Writable directory where the access token will be stored.
+     */
+    private string $dataDir;
+
     public function __construct(
         string $clientId,
         string $clientSecret,
         int $eshopId,
+        string $dataDir,
         string $widgetJsUrl = 'https://myorder.isklad.eu/widget/cart/shop/',
         string $clientTokenUrl = 'https://auth.isklad.eu/auth/access-token',
         string $iskladApiDeviceIdentityRequestUrl = 'https://auth.isklad.eu/api/client/device-identity-request',
@@ -74,14 +80,12 @@ final class IskladEnv
         string $keyCsrfToken = '_isklad_csrf_token',
         bool $displayErrors = false
     ) {
-        if ($displayErrors) {
-            ini_set('display_errors', '1');
-            ini_set('display_startup_errors', '1');
-            error_reporting(E_ALL);
-        }
+        // required
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->eshopId = $eshopId;
+        $this->dataDir = $dataDir;
+        // optional
         $this->widgetJsUrl = $widgetJsUrl . $eshopId;
         $this->clientTokenUrl = $clientTokenUrl;
         $this->keyDeviceId = $keyDeviceId;
@@ -89,6 +93,12 @@ final class IskladEnv
         $this->keyCsrfToken = $keyCsrfToken;
         $this->myorderDomain = $myorderDomain;
         $this->iskladApiDeviceIdentityRequestUrl = $iskladApiDeviceIdentityRequestUrl;
+
+        if ($displayErrors) {
+            ini_set('display_errors', '1');
+            ini_set('display_startup_errors', '1');
+            error_reporting(E_ALL);
+        }
     }
 
     /**
@@ -109,21 +119,9 @@ final class IskladEnv
         return $protocol . $uri . $param;
     }
 
-    /**
-     * Data directory used to store tokens.
-     */
     public function getDataDir(): string
     {
-        $dir = __DIR__ . '/data';
-        if (is_dir($dir)) {
-            return $dir;
-        }
-
-        if (false === mkdir($dir, 0770, true) && false === is_dir($dir)) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
-        }
-
-        return $dir;
+        return rtrim($this->dataDir, '/');
     }
 
     public function getWidgetJsUrl(): string
