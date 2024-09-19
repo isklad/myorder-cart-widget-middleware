@@ -15,11 +15,11 @@ final class ClientTokenStorage
     }
 
     /**
-   * @return array{access_token:string, expire_at:string}
+   * @return array{accessToken:string, expireAt:string}
    */
   public function getSavedTokenDto(): array
   {
-    $tokenDto = ['access_token' => '', 'expire_at' => '1 year ago'];
+    $tokenDto = ['accessToken' => '', 'expireAt' => '1 year ago'];
     $filename = $this->getClientTokenFilename();
     if (file_exists($filename)) {
         require $filename;
@@ -34,7 +34,7 @@ final class ClientTokenStorage
   }
 
   /**
-   * @param array{access_token:string, expire_at:string} $tokenDto
+   * @param array{accessToken:string, expireAt:string} $tokenDto
    */
   public function saveToken(array $tokenDto)
   {
