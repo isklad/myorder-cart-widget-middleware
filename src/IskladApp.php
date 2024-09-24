@@ -87,7 +87,8 @@ final class IskladApp
         if (isset($_GET[$this->env->getKeyDeviceId()])
             && isset($_GET[$this->env->getKeyDeviceIdentityRequestId()])
             && isset($_SESSION[$this->env->getKeyDeviceIdentityRequestId()])
-            && $_GET[$this->env->getKeyDeviceIdentityRequestId()] === $_SESSION[$this->env->getKeyDeviceIdentityRequestId()]) {
+            && $_GET[$this->env->getKeyDeviceIdentityRequestId()] === $_SESSION[$this->env->getKeyDeviceIdentityRequestId()])
+        {
             $_SESSION[$this->env->getKeyDeviceId()] = $_GET[$this->env->getKeyDeviceId()];
             unset($_SESSION[$this->env->getKeyDeviceIdentityRequestId()]);
             $this->showWidgetModal = true;
@@ -95,7 +96,8 @@ final class IskladApp
             return;
         }
         if (empty($_SESSION[$this->env->getKeyDeviceId()])
-            && empty($_SESSION[$this->env->getKeyDeviceIdentityRequestId()])) {
+            && empty($_SESSION[$this->env->getKeyDeviceIdentityRequestId()]))
+        {
             $_SESSION[$this->env->getKeyDeviceIdentityRequestId()] = $this->getApiClient()->fetchDeviceIdentity();
         }
     }
