@@ -82,3 +82,12 @@ php:
 ```php
 $app->env()->getIni()['googleApiKey']
 ```
+
+## Customization
+You may want to customize the following items in your ini file:
+
+`keyDeviceId` - this is the key under which the device-id will be stored in session, and also the name of the GET parameter in the callback from device identification (see [Device-id callback handler](#device-id-callback-handler)).
+
+`keyDeviceIdentityRequestId` - this is the key under which the device-identity-request-id will be stored in session, and also the name of the GET parameter in the callback from device identification.
+
+`keyCsrfToken` - this is the key under which the device-id will be stored in session.
