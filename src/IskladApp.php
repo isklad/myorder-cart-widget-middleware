@@ -30,7 +30,7 @@ final class IskladApp
             http_response_code(403);
             exit;
         }
-        switch ($_GET['service']) {
+        switch ($_GET['service'] ?? '') {
             case 'egon':
                 $domain = $this->env()->getEgonDomain();
                 break;
