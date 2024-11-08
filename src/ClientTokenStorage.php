@@ -47,5 +47,8 @@ final class ClientTokenStorage
     if (false === file_put_contents($filename, $fileContent)) {
       throw new RuntimeException('Error writing access token to data dir.');
     }
+    if (function_exists('opcache_invalidate')) {
+      opcache_invalidate($filename, true);
+    }
   }
 }
