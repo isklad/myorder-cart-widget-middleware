@@ -30,7 +30,16 @@ final class IskladApp
             http_response_code(403);
             exit;
         }
-        $url = $this->env->getMyorderDomain() . $_GET['uri'];
+        switch ($_GET['service']) {
+            case 'egon':
+                $domain = $this->env()->getEgonDomain();
+                break;
+            case 'myorder':
+            default:
+                $domain = $this->env()->getMyorderDomain();
+                break;
+        }
+        $url = $domain . $_GET['uri'];
         header('Content-Type: application/json');
         try {
             switch ($_SERVER['REQUEST_METHOD']) {

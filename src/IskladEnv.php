@@ -68,6 +68,11 @@ final class IskladEnv
     private string $myorderDomain;
 
     /**
+     * Egon backend.
+     */
+    private string $egonDomain;
+
+    /**
      * Writable directory where the access token will be stored.
      */
     private string $dataDir;
@@ -81,6 +86,7 @@ final class IskladEnv
         string $clientTokenUrl = 'https://auth.isklad.eu/auth/access-token',
         string $iskladApiDeviceIdentityRequestUrl = 'https://auth.isklad.eu/api/client/device-identity-request',
         string $myorderDomain = 'https://myorder.isklad.eu',
+        string $egonDomain = 'https://api.isklad.eu',
         string $keyDeviceId = '_isklad_deviceId',
         string $keyDeviceIdentityRequestId = '_isklad_deviceIdentityRequestId',
         string $keyCsrfToken = '_isklad_csrf_token',
@@ -98,6 +104,7 @@ final class IskladEnv
         $this->keyDeviceIdentityRequestId = $keyDeviceIdentityRequestId;
         $this->keyCsrfToken = $keyCsrfToken;
         $this->myorderDomain = $myorderDomain;
+        $this->egonDomain = $egonDomain;
         $this->iskladApiDeviceIdentityRequestUrl = $iskladApiDeviceIdentityRequestUrl;
 
         if ($displayErrors) {
@@ -120,6 +127,7 @@ final class IskladEnv
             $ini['clientTokenUrl'] ?? null,
             $ini['iskladApiDeviceIdentityRequestUrl'] ?? null,
             $ini['myorderDomain'] ?? null,
+            $ini['egonDomain'] ?? null,
             $ini['keyDeviceId'] ?? null,
             $ini['keyDeviceIdentityRequestId'] ?? null,
             $ini['keyCsrfToken'] ?? null,
@@ -206,5 +214,10 @@ final class IskladEnv
     public function getMyorderDomain(): string
     {
         return $this->myorderDomain;
+    }
+
+    public function getEgonDomain(): string
+    {
+        return $this->egonDomain;
     }
 }
