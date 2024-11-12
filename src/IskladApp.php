@@ -55,6 +55,7 @@ final class IskladApp
             }
             echo json_encode($response);
         } catch (ApiError $apiError) {
+            http_response_code($apiError->getHttpCode());
             echo json_encode([
                 'error' => $apiError->getMessage(),
                 'httpCode' => $apiError->getHttpCode(),
