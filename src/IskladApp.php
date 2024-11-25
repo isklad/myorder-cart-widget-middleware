@@ -42,17 +42,10 @@ final class IskladApp
         $url = $domain . $_GET['uri'];
         header('Content-Type: application/json');
         try {
-            switch ($_SERVER['REQUEST_METHOD']) {
-                case 'POST':
-                    $data = file_get_contents('php://input');
-                    $response = $this->apiClient->post($url, $data);
-                    break;
-                case 'GET':
-                    $response = $this->apiClient->get($url);
-                    break;
-                default:
-                    $response = [];
-            }
+            $method = $_SERVER['REQUEST_METHOD'];
+            $data = $method === 'GET' ? null : file_get_contents('php://input');
+            $response = $this->apiClient->customRequest($method, $url, $data);
+
             echo json_encode($response);
         } catch (ApiError $apiError) {
             http_response_code($apiError->getHttpCode());

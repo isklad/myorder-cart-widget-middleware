@@ -26,9 +26,7 @@ final class ApiClient
      */
     public function get(string $url): array
     {
-        $ch = $this->getCurlHandle($url);
-
-        return $this->handleResponse($ch);
+        return $this->customRequest('GET', $url, null);
     }
 
     /**
@@ -37,12 +35,51 @@ final class ApiClient
      */
     public function post(string $url, $data): array
     {
-        if (is_array($data)) {
-            $data = json_encode($data);
-        }
+        return $this->customRequest('POST', $url, $data);
+    }
+
+    /**
+     * @param array|string $data - json string or array that will be encoded as json.
+     * @throws ApiError
+     */
+    public function put(string $url, $data): array
+    {
+        return $this->customRequest('PUT', $url, $data);
+    }
+
+    /**
+     * @param array|string $data - json string or array that will be encoded as json.
+     * @throws ApiError
+     */
+    public function patch(string $url, $data): array
+    {
+        return $this->customRequest('PATCH', $url, $data);
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public function delete(string $url): array
+    {
+        return $this->customRequest('DELETE', $url, null);
+    }
+
+    /**
+     * @param array|string $data - json string or array that will be encoded as json.
+     * @throws ApiError
+     */
+    public function customRequest(string $method, string $url, $data): array
+    {
         $ch = $this->getCurlHandle($url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        if ('GET' !== $method) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+            if (is_array($data)) {
+                $data = json_encode($data);
+            }
+            if ($data) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            }
+        }
 
         return $this->handleResponse($ch);
     }
