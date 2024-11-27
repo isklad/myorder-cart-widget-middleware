@@ -161,7 +161,7 @@ final class ApiClient
         $responseStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $responseData = json_decode($response, true);
+        $responseData = json_decode($response, true) ?? [];
 
         if ($responseStatus >= 400) {
             $error = $responseData['error'] ?? '';
