@@ -5,6 +5,15 @@ namespace Isklad\MyorderCartWidgetMiddleware;
 
 final class IskladEnv
 {
+    const DEFAULT_MYORDER_DOMAIN = 'https://myorder.isklad.eu';
+    const DEFAULT_EGON_DOMAIN = 'https://api.isklad.eu';
+    const DEFAULT_AUTH_DOMAIN = 'https://auth.isklad.eu';
+    const DEFAULT_KEY_DEVICE_ID = '_isklad_deviceId';
+    const DEFAULT_KEY_DEVICE_IDENTITY_REQUEST_ID = '_isklad_deviceIdentityRequestId';
+    const DEFAULT_KEY_CSRF_TOKEN = '_isklad_csrf_token';
+    const DEFAULT_DISPLAY_ERRORS = false;
+    const DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION = false;
+
     /**
      * Parsed ini vars, (if this class is instantiated with an ini file).
      * @see self::fromIniFile()
@@ -81,14 +90,14 @@ final class IskladEnv
         int $eshopId,
         string $middlewareUrl,
         string $dataDir,
-        ?string $myorderDomain = 'https://myorder.isklad.eu',
-        ?string $egonDomain = 'https://api.isklad.eu',
-        ?string $authDomain = 'https://auth.isklad.eu',
-        ?string $keyDeviceId = '_isklad_deviceId',
-        ?string $keyDeviceIdentityRequestId = '_isklad_deviceIdentityRequestId',
-        ?string $keyCsrfToken = '_isklad_csrf_token',
-        ?bool $displayErrors = false,
-        ?bool $disabledCsrfTokenVerification = false
+        string $myorderDomain = self::DEFAULT_MYORDER_DOMAIN,
+        string $egonDomain = self::DEFAULT_EGON_DOMAIN,
+        string $authDomain = self::DEFAULT_AUTH_DOMAIN,
+        string $keyDeviceId = self::DEFAULT_KEY_DEVICE_ID,
+        string $keyDeviceIdentityRequestId = self::DEFAULT_KEY_DEVICE_IDENTITY_REQUEST_ID,
+        string $keyCsrfToken = self::DEFAULT_KEY_CSRF_TOKEN,
+        bool $displayErrors = self::DEFAULT_DISPLAY_ERRORS,
+        bool $disabledCsrfTokenVerification = self::DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION
     ) {
         // required
         $this->clientId = $clientId;
@@ -122,14 +131,14 @@ final class IskladEnv
             $ini['eshopId'] ?? null,
             $ini['middlewareUrl'] ?? null,
             $ini['dataDir'] ?? null,
-            $ini['myorderDomain'] ?? null,
-            $ini['egonDomain'] ?? null,
-            $ini['authDomain'] ?? null,
-            $ini['keyDeviceId'] ?? null,
-            $ini['keyDeviceIdentityRequestId'] ?? null,
-            $ini['keyCsrfToken'] ?? null,
-            $ini['displayErrors'] ?? null,
-            $ini['disabledCsrfTokenVerification'] ?? null,
+            $ini['myorderDomain'] ?? self::DEFAULT_MYORDER_DOMAIN,
+            $ini['egonDomain'] ?? self::DEFAULT_EGON_DOMAIN,
+            $ini['authDomain'] ?? self::DEFAULT_AUTH_DOMAIN,
+            $ini['keyDeviceId'] ?? self::DEFAULT_KEY_DEVICE_ID,
+            $ini['keyDeviceIdentityRequestId'] ?? self::DEFAULT_KEY_DEVICE_IDENTITY_REQUEST_ID,
+            $ini['keyCsrfToken'] ?? self::DEFAULT_KEY_CSRF_TOKEN,
+            $ini['displayErrors'] ?? self::DEFAULT_DISPLAY_ERRORS,
+            $ini['disabledCsrfTokenVerification'] ?? self::DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION,
         );
         $self->ini = $ini;
 
