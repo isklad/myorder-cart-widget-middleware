@@ -81,14 +81,14 @@ final class IskladEnv
         int $eshopId,
         string $middlewareUrl,
         string $dataDir,
-        string $myorderDomain = 'https://myorder.isklad.eu',
-        string $egonDomain = 'https://api.isklad.eu',
-        string $authDomain = 'https://auth.isklad.eu',
-        string $keyDeviceId = '_isklad_deviceId',
-        string $keyDeviceIdentityRequestId = '_isklad_deviceIdentityRequestId',
-        string $keyCsrfToken = '_isklad_csrf_token',
-        bool $displayErrors = false,
-        bool $disabledCsrfTokenVerification = false
+        ?string $myorderDomain = 'https://myorder.isklad.eu',
+        ?string $egonDomain = 'https://api.isklad.eu',
+        ?string $authDomain = 'https://auth.isklad.eu',
+        ?string $keyDeviceId = '_isklad_deviceId',
+        ?string $keyDeviceIdentityRequestId = '_isklad_deviceIdentityRequestId',
+        ?string $keyCsrfToken = '_isklad_csrf_token',
+        ?bool $displayErrors = false,
+        ?bool $disabledCsrfTokenVerification = false
     ) {
         // required
         $this->clientId = $clientId;
