@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Isklad\MyorderCartWidgetMiddleware;
 
-use RuntimeException;
-
 final class IskladEnv
 {
     /**
@@ -12,11 +10,6 @@ final class IskladEnv
      * @see self::fromIniFile()
      */
     private array $ini = [];
-
-    /**
-     * Url from which to fetch widget.
-     */
-    private string $widgetJsUrl;
 
     /**
      * ID of client in isklad-auth app.
@@ -29,19 +22,9 @@ final class IskladEnv
     private string $clientSecret;
 
     /**
-     * URL from which to fetch client token.
-     */
-    private string $clientTokenUrl;
-
-    /**
      * ID of eshop.
      */
-    private int $eshopId = 0;
-
-    /**
-     * URL where to request device identification. Secured by client token.
-     */
-    private string $iskladApiDeviceIdentityRequestUrl;
+    private int $eshopId;
 
     /**
      * This key will be used to store device id in session.
@@ -73,39 +56,54 @@ final class IskladEnv
     private string $egonDomain;
 
     /**
+     * Auth backend.
+     */
+    private string $authDomain;
+
+    /**
      * Writable directory where the access token will be stored.
      */
     private string $dataDir;
+
+    /**
+     * Url of the middleware endpoint.
+     */
+    private string $middlewareUrl;
+
+    /**
+     * Use this only for local development purposes. Never disable CSRF token verification in production.
+     */
+    private bool $disabledCsrfTokenVerification;
 
     public function __construct(
         string $clientId,
         string $clientSecret,
         int $eshopId,
+        string $middlewareUrl,
         string $dataDir,
-        string $widgetJsUrl = 'https://myorder.isklad.eu/widget/cart/shop/',
-        string $clientTokenUrl = 'https://auth.isklad.eu/auth/access-token',
-        string $iskladApiDeviceIdentityRequestUrl = 'https://auth.isklad.eu/api/client/device-identity-request',
         string $myorderDomain = 'https://myorder.isklad.eu',
         string $egonDomain = 'https://api.isklad.eu',
+        string $authDomain = 'https://auth.isklad.eu',
         string $keyDeviceId = '_isklad_deviceId',
         string $keyDeviceIdentityRequestId = '_isklad_deviceIdentityRequestId',
         string $keyCsrfToken = '_isklad_csrf_token',
-        bool $displayErrors = false
+        bool $displayErrors = false,
+        bool $disabledCsrfTokenVerification = false
     ) {
         // required
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->eshopId = $eshopId;
         $this->dataDir = $dataDir;
+        $this->middlewareUrl = $middlewareUrl;
         // optional
-        $this->widgetJsUrl = $widgetJsUrl . $eshopId;
-        $this->clientTokenUrl = $clientTokenUrl;
         $this->keyDeviceId = $keyDeviceId;
         $this->keyDeviceIdentityRequestId = $keyDeviceIdentityRequestId;
         $this->keyCsrfToken = $keyCsrfToken;
         $this->myorderDomain = $myorderDomain;
         $this->egonDomain = $egonDomain;
-        $this->iskladApiDeviceIdentityRequestUrl = $iskladApiDeviceIdentityRequestUrl;
+        $this->authDomain = $authDomain;
+        $this->disabledCsrfTokenVerification = $disabledCsrfTokenVerification;
 
         if ($displayErrors) {
             ini_set('display_errors', '1');
@@ -122,22 +120,25 @@ final class IskladEnv
             $ini['clientId'] ?? null,
             $ini['clientSecret'] ?? null,
             $ini['eshopId'] ?? null,
+            $ini['middlewareUrl'] ?? null,
             $ini['dataDir'] ?? null,
-            $ini['widgetJsUrl'] ?? null,
-            $ini['clientTokenUrl'] ?? null,
-            $ini['iskladApiDeviceIdentityRequestUrl'] ?? null,
             $ini['myorderDomain'] ?? null,
             $ini['egonDomain'] ?? null,
+            $ini['authDomain'] ?? null,
             $ini['keyDeviceId'] ?? null,
             $ini['keyDeviceIdentityRequestId'] ?? null,
             $ini['keyCsrfToken'] ?? null,
             $ini['displayErrors'] ?? null,
+            $ini['disabledCsrfTokenVerification'] ?? null,
         );
         $self->ini = $ini;
 
         return $self;
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public function getIni(): array
     {
         return $this->ini;
@@ -147,18 +148,15 @@ final class IskladEnv
      * URL target for redirect with provided device id.
      *
      * The {{ISKLAD_DEVICE_ID}} will be translated into an actual device ID (UUID v7).
-     * Example: https://myeshop.com?iskladDevice={{ISKLAD_DEVICE_ID}} will be redirected to
-     *          https://myeshop.com?iskladDevice=01915014-a940-77ec-9b79-72380ecbc0b0
      */
     public function getIdentityRedirectUrlTemplate(): string
     {
-        $protocol = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://';
-        $uri = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        $param = (empty($_GET) ? '?' : '&')
-            . $this->keyDeviceId . '={{ISKLAD_DEVICE_ID}}'
-            . '&' . $this->keyDeviceIdentityRequestId . '={{ISKLAD_DEVICE_IDENTITY_REQUEST_ID}}';
-
-        return $protocol . $uri . $param;
+        return $this->getMiddlewareUrl()
+            . '?service=middleware'
+            . '&uri=' . DeviceIdentification::URI_RECEIVE_DEVICE_IDENTITY
+            . '&' . $this->keyDeviceId . '={{ISKLAD_DEVICE_ID}}'
+            . '&' . $this->keyDeviceIdentityRequestId . '={{ISKLAD_DEVICE_IDENTITY_REQUEST_ID}}'
+        ;
     }
 
     public function getDataDir(): string
@@ -166,9 +164,14 @@ final class IskladEnv
         return rtrim($this->dataDir, '/');
     }
 
+    /**
+     * Url from which to fetch widget.
+     *
+     * @noinspection PhpUnused
+     */
     public function getWidgetJsUrl(): string
     {
-        return $this->widgetJsUrl;
+        return $this->getMyorderDomain() . '/widget/cart/shop/' . $this->getEshopId();
     }
 
     public function getClientId(): string
@@ -181,9 +184,12 @@ final class IskladEnv
         return $this->clientSecret;
     }
 
+    /**
+     * URL from which to fetch client token.
+     */
     public function getClientTokenUrl(): string
     {
-        return $this->clientTokenUrl;
+        return $this->getAuthDomain() . '/auth/access-token';
     }
 
     public function getEshopId(): int
@@ -191,9 +197,17 @@ final class IskladEnv
         return $this->eshopId;
     }
 
+    /**
+     * URL where to request device identification. Secured by client token.
+     */
     public function getIskladApiDeviceIdentityRequestUrl(): string
     {
-        return $this->iskladApiDeviceIdentityRequestUrl;
+        return $this->getAuthDomain() . '/api/client/device-identity-request';
+    }
+
+    public function getIskladDeviceIdentificationUrl(string $deviceIdentityRequestId): string
+    {
+        return $this->getAuthDomain() . '/web/device/device-identity-request/' . $deviceIdentityRequestId;
     }
 
     public function getKeyDeviceId(): string
@@ -219,5 +233,20 @@ final class IskladEnv
     public function getEgonDomain(): string
     {
         return $this->egonDomain;
+    }
+
+    public function getAuthDomain(): string
+    {
+        return $this->authDomain;
+    }
+
+    public function getMiddlewareUrl(): string
+    {
+        return $this->middlewareUrl;
+    }
+
+    public function isDisabledCsrfTokenVerification(): bool
+    {
+        return $this->disabledCsrfTokenVerification;
     }
 }

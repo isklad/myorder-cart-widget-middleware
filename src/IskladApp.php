@@ -7,7 +7,7 @@ final class IskladApp
 {
     private IskladEnv $env;
     private ApiClient $apiClient;
-    private bool $showWidgetModal = false;
+    private DeviceIdentification $deviceIdentification;
 
     public function __construct(IskladEnv $env)
     {
@@ -16,6 +16,7 @@ final class IskladApp
         }
         $this->env = $env;
         $this->apiClient = new ApiClient($this->env);
+        $this->deviceIdentification = new DeviceIdentification($env);
         $this->initialize();
     }
 
@@ -24,13 +25,13 @@ final class IskladApp
         return $this->env;
     }
 
-    public function myorderApiController(): void
+    public function iskladController(): void
     {
-        if (($_SERVER['HTTP_X_ISKLAD_CSRF_TOKEN'] ?? null) !== $this->getCsrfToken()) {
-            http_response_code(403);
-            exit;
-        }
         switch ($_GET['service'] ?? '') {
+            case 'middleware':
+                $this->middlewareController((string) $_GET['uri']);
+
+                return;
             case 'egon':
                 $domain = $this->env()->getEgonDomain();
                 break;
@@ -38,6 +39,11 @@ final class IskladApp
             default:
                 $domain = $this->env()->getMyorderDomain();
                 break;
+        }
+        if (!$this->env()->isDisabledCsrfTokenVerification()
+            && ($_SERVER['HTTP_X_ISKLAD_CSRF_TOKEN'] ?? null) !== $this->getCsrfToken()) {
+            http_response_code(403);
+            exit;
         }
         $url = $domain . $_GET['uri'];
         header('Content-Type: application/json');
@@ -56,6 +62,24 @@ final class IskladApp
         }
     }
 
+    private function middlewareController(string $uri): void
+    {
+        switch ($uri) {
+            case DeviceIdentification::URI_IDENTIFY_DEVICE:
+                $this->deviceIdentification->identifyDevice();
+                return;
+            case DeviceIdentification::URI_RECEIVE_DEVICE_IDENTITY:
+                $this->deviceIdentification->receiveDeviceIdentity();
+                return;
+            case 'device-id':
+                header('Content-Type: application/json');
+                echo json_encode(['data' => [
+                    'id' => $this->getDeviceId(),
+                ]]);
+                return;
+        }
+    }
+
     public function getApiClient(): ApiClient
     {
         return $this->apiClient;
@@ -64,11 +88,6 @@ final class IskladApp
     public function getDeviceId(): ?string
     {
         return $_SESSION[$this->env->getKeyDeviceId()] ?? null;
-    }
-
-    public function getDeviceIdentityRequestId(): ?string
-    {
-        return $_SESSION[$this->env->getKeyDeviceIdentityRequestId()] ?? null;
     }
 
     public function getCsrfToken(): string
@@ -80,24 +99,8 @@ final class IskladApp
         return $_SESSION[$this->env->getKeyCsrfToken()];
     }
 
-    public function isShowWidgetModal(): bool
-    {
-        return $this->showWidgetModal;
-    }
-
     private function initialize(): void
     {
-        if (isset($_GET[$this->env->getKeyDeviceId()])
-            && isset($_GET[$this->env->getKeyDeviceIdentityRequestId()])
-            && isset($_SESSION[$this->env->getKeyDeviceIdentityRequestId()])
-            && $_GET[$this->env->getKeyDeviceIdentityRequestId()] === $_SESSION[$this->env->getKeyDeviceIdentityRequestId()])
-        {
-            $_SESSION[$this->env->getKeyDeviceId()] = $_GET[$this->env->getKeyDeviceId()];
-            unset($_SESSION[$this->env->getKeyDeviceIdentityRequestId()]);
-            $this->showWidgetModal = true;
-
-            return;
-        }
         if (empty($_SESSION[$this->env->getKeyDeviceId()])
             && empty($_SESSION[$this->env->getKeyDeviceIdentityRequestId()]))
         {
