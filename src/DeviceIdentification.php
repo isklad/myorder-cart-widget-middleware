@@ -22,7 +22,7 @@ final class DeviceIdentification
             header('Location: ' . $this->env->getIskladDeviceIdentificationUrl($deviceRequestId));
             exit();
         }
-        $this->closeWindow();
+        $this->renderWindow();
     }
 
     public function receiveDeviceIdentity(): void
@@ -35,7 +35,7 @@ final class DeviceIdentification
             $_SESSION[$this->env->getKeyDeviceId()] = $_GET[$this->env->getKeyDeviceId()];
             unset($_SESSION[$this->env->getKeyDeviceIdentityRequestId()]);
         }
-        $this->closeWindow();
+        $this->renderWindow();
     }
 
     private function getDeviceIdentityRequestId(): ?string
@@ -43,8 +43,43 @@ final class DeviceIdentification
         return $_SESSION[$this->env->getKeyDeviceIdentityRequestId()] ?? null;
     }
 
-    private function closeWindow(): void
+    private function renderWindow(): void
     {
-        echo '<script>window.close();</script>';
+        echo '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Loading Circle</title>
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background-color: #f4f4f4;
+                        margin: 0;
+                    }
+                    .loader {
+                        width: 50px;
+                        height: 50px;
+                        border: 5px solid #ccc;
+                        border-top: 5px solid #007bff;
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                    }
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="loader"></div>
+                <script>window.close();</script>
+            </body>
+            </html>
+        ';
     }
 }
