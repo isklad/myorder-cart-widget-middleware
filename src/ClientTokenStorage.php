@@ -30,7 +30,7 @@ final class ClientTokenStorage
 
   private function getClientTokenFilename(): string
   {
-    return $this->env->getDataDir() . '/ClientToken.php';
+      return $this->env->getDataDir() . '/ClientToken_' . $this->env->getEshopId() . '.php';
   }
 
   /**
