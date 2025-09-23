@@ -77,7 +77,11 @@ final class DeviceIdentification
             </head>
             <body>
                 <div class="loader"></div>
-                <script>window.close();</script>
+                ' . (
+                    $this->env->isDisabledPopupClose()
+                    ? '<div style="position: absolute; bottom: 0; font-size: 10px;">disabled popup close</div>'
+                    : '<script>window.close();</script>'
+            ) . '
             </body>
             </html>
         ';

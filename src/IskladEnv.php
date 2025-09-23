@@ -13,6 +13,7 @@ final class IskladEnv
     const DEFAULT_KEY_CSRF_TOKEN = '_isklad_csrf_token';
     const DEFAULT_DISPLAY_ERRORS = false;
     const DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION = false;
+    const DEFAULT_DISABLED_POPUP_CLOSE = false;
 
     /**
      * Parsed ini vars, (if this class is instantiated with an ini file).
@@ -84,6 +85,12 @@ final class IskladEnv
      */
     private bool $disabledCsrfTokenVerification;
 
+    /**
+     * Use this only for local development.
+     * Disables the automatic closing of the popup after successful device identification.
+     */
+    private bool $disabledPopupClose;
+
     public function __construct(
         string $clientId,
         string $clientSecret,
@@ -97,7 +104,8 @@ final class IskladEnv
         string $keyDeviceIdentityRequestId = self::DEFAULT_KEY_DEVICE_IDENTITY_REQUEST_ID,
         string $keyCsrfToken = self::DEFAULT_KEY_CSRF_TOKEN,
         bool $displayErrors = self::DEFAULT_DISPLAY_ERRORS,
-        bool $disabledCsrfTokenVerification = self::DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION
+        bool $disabledCsrfTokenVerification = self::DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION,
+        bool $disabledPopupClose = self::DEFAULT_DISABLED_POPUP_CLOSE
     ) {
         // required
         $this->clientId = $clientId;
@@ -113,6 +121,7 @@ final class IskladEnv
         $this->egonDomain = $egonDomain;
         $this->authDomain = $authDomain;
         $this->disabledCsrfTokenVerification = $disabledCsrfTokenVerification;
+        $this->disabledPopupClose = $disabledPopupClose;
 
         if ($displayErrors) {
             ini_set('display_errors', '1');
@@ -139,6 +148,7 @@ final class IskladEnv
             $ini['keyCsrfToken'] ?? self::DEFAULT_KEY_CSRF_TOKEN,
             $ini['displayErrors'] ?? self::DEFAULT_DISPLAY_ERRORS,
             $ini['disabledCsrfTokenVerification'] ?? self::DEFAULT_DISABLED_CSRF_TOKEN_VERIFICATION,
+            $ini['disabledPopupClose'] ?? self::DEFAULT_DISABLED_POPUP_CLOSE,
         );
         $self->ini = $ini;
 
@@ -257,5 +267,10 @@ final class IskladEnv
     public function isDisabledCsrfTokenVerification(): bool
     {
         return $this->disabledCsrfTokenVerification;
+    }
+
+    public function isDisabledPopupClose(): bool
+    {
+        return $this->disabledPopupClose;
     }
 }
