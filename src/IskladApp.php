@@ -73,9 +73,9 @@ final class IskladApp
                 return;
             case 'device-id':
                 header('Content-Type: application/json');
-                echo json_encode(['data' => [
+                echo json_encode([
                     'id' => $this->getDeviceId(),
-                ]]);
+                ]);
                 return;
         }
     }
