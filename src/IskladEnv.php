@@ -66,6 +66,11 @@ final class IskladEnv
     private string $egonDomain;
 
     /**
+     * Eshop backend.
+     */
+    private string $eshopBackendUrl;
+
+    /**
      * Auth backend.
      */
     private string $authDomain;
@@ -95,6 +100,7 @@ final class IskladEnv
         string $clientId,
         string $clientSecret,
         int $eshopId,
+        string $eshopBackendUrl,
         string $middlewareUrl,
         string $dataDir,
         string $myorderDomain = self::DEFAULT_MYORDER_DOMAIN,
@@ -111,6 +117,7 @@ final class IskladEnv
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->eshopId = $eshopId;
+        $this->eshopBackendUrl = $eshopBackendUrl;
         $this->dataDir = $dataDir;
         $this->middlewareUrl = $middlewareUrl;
         // optional
@@ -138,6 +145,7 @@ final class IskladEnv
             $ini['clientId'] ?? null,
             $ini['clientSecret'] ?? null,
             $ini['eshopId'] ?? null,
+            $ini['eshopBackendUrl'] ?? null,
             $ini['middlewareUrl'] ?? null,
             $ini['dataDir'] ?? null,
             $ini['myorderDomain'] ?? self::DEFAULT_MYORDER_DOMAIN,
@@ -252,6 +260,11 @@ final class IskladEnv
     public function getEgonDomain(): string
     {
         return $this->egonDomain;
+    }
+
+    public function getEshopBackendUrl(): string
+    {
+        return $this->eshopBackendUrl;
     }
 
     public function getAuthDomain(): string

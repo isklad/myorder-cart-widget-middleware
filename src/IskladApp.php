@@ -27,6 +27,12 @@ final class IskladApp
 
     public function iskladController(): void
     {
+        if (!$this->env()->isDisabledCsrfTokenVerification()
+            && ($_SERVER['HTTP_X_ISKLAD_CSRF_TOKEN'] ?? null) !== $this->getCsrfToken()) {
+            http_response_code(403);
+            exit;
+        }
+
         switch ($_GET['service'] ?? '') {
             case 'middleware':
                 $this->middlewareController((string) $_GET['uri']);
@@ -35,17 +41,18 @@ final class IskladApp
             case 'egon':
                 $domain = $this->env()->getEgonDomain();
                 break;
+            case 'eshop-be':
+                $domain = $this->env()->getEshopBackendUrl();
+                break;
             case 'myorder':
             default:
                 $domain = $this->env()->getMyorderDomain();
                 break;
         }
-        if (!$this->env()->isDisabledCsrfTokenVerification()
-            && ($_SERVER['HTTP_X_ISKLAD_CSRF_TOKEN'] ?? null) !== $this->getCsrfToken()) {
-            http_response_code(403);
-            exit;
+        $url = $domain . ($_GET['uri'] ?? '');
+        if ($_GET['query'] ?? null) {
+            $url .= '?' . $_GET['query'];
         }
-        $url = $domain . $_GET['uri'];
         header('Content-Type: application/json');
         try {
             $method = $_SERVER['REQUEST_METHOD'];
