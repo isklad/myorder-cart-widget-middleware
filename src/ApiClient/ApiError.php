@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Isklad\MyorderCartWidgetMiddleware;
+namespace Isklad\MyorderCartWidgetMiddleware\ApiClient;
 
 use Exception;
 

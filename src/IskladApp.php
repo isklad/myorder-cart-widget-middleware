@@ -3,11 +3,17 @@ declare(strict_types=1);
 
 namespace Isklad\MyorderCartWidgetMiddleware;
 
+use Isklad\MyorderCartWidgetMiddleware\ApiClient\ApiClient;
+use Isklad\MyorderCartWidgetMiddleware\ApiClient\ApiError;
+use Isklad\MyorderCartWidgetMiddleware\Jwt\JwtService;
+use Lcobucci\JWT\Token;
+
 final class IskladApp
 {
     private IskladEnv $env;
     private ApiClient $apiClient;
     private DeviceIdentification $deviceIdentification;
+    private JwtService $jwtService;
 
     public function __construct(IskladEnv $env)
     {
@@ -16,8 +22,14 @@ final class IskladApp
         }
         $this->env = $env;
         $this->apiClient = new ApiClient($this->env);
+        $this->jwtService = new JwtService($env);
         $this->deviceIdentification = new DeviceIdentification($env);
         $this->initialize();
+    }
+
+    public function getSigned(array $data): Token\Plain
+    {
+        return $this->jwtService->createJwt($data);
     }
 
     public function env(): IskladEnv
@@ -40,9 +52,6 @@ final class IskladApp
                 return;
             case 'egon':
                 $domain = $this->env()->getEgonDomain();
-                break;
-            case 'eshop-be':
-                $domain = $this->env()->getEshopBackendUrl();
                 break;
             case 'myorder':
             default:

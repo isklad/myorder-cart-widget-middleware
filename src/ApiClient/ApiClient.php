@@ -1,14 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Isklad\MyorderCartWidgetMiddleware;
+namespace Isklad\MyorderCartWidgetMiddleware\ApiClient;
 
 use DateTimeImmutable;
+use Isklad\MyorderCartWidgetMiddleware\IskladEnv;
 
 final class ApiClient
 {
     private IskladEnv $env;
-    private ClientTokenStorage $clientTokenStorage;
+    private ApiClientTokenStorage $clientTokenStorage;
     private string $clientToken = '';
 
     /**
@@ -17,7 +18,7 @@ final class ApiClient
     public function __construct(IskladEnv $env)
     {
         $this->env = $env;
-        $this->clientTokenStorage = new ClientTokenStorage($env);
+        $this->clientTokenStorage = new ApiClientTokenStorage($env);
         $this->clientToken = $this->getClientToken();
     }
 

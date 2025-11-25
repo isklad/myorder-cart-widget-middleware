@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Isklad\MyorderCartWidgetMiddleware;
 
+use Isklad\MyorderCartWidgetMiddleware\Jwt\JwtConfig;
+
 final class IskladEnv
 {
     const DEFAULT_MYORDER_DOMAIN = 'https://myorder.isklad.eu';
@@ -66,9 +68,9 @@ final class IskladEnv
     private string $egonDomain;
 
     /**
-     * Eshop backend.
+     * Settings for JWT token generation.
      */
-    private string $eshopBackendUrl;
+    private JwtConfig $jwtConfig;
 
     /**
      * Auth backend.
@@ -100,7 +102,7 @@ final class IskladEnv
         string $clientId,
         string $clientSecret,
         int $eshopId,
-        string $eshopBackendUrl,
+        JwtConfig $jwtConfig,
         string $middlewareUrl,
         string $dataDir,
         string $myorderDomain = self::DEFAULT_MYORDER_DOMAIN,
@@ -117,7 +119,7 @@ final class IskladEnv
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->eshopId = $eshopId;
-        $this->eshopBackendUrl = $eshopBackendUrl;
+        $this->jwtConfig = $jwtConfig;
         $this->dataDir = $dataDir;
         $this->middlewareUrl = $middlewareUrl;
         // optional
@@ -140,12 +142,17 @@ final class IskladEnv
     public static function fromIniFile(string $filename): self
     {
         $ini = parse_ini_file($filename, false, INI_SCANNER_TYPED);
+        $jwtConfig = new JwtConfig(
+            $ini['privateKey'] ?? '',
+            $ini['privateKeyPassphrase'] ?? '',
+            $ini['tokenExpireInterval'] ?? null,
+        );
 
         $self = new self(
             $ini['clientId'] ?? null,
             $ini['clientSecret'] ?? null,
             $ini['eshopId'] ?? null,
-            $ini['eshopBackendUrl'] ?? null,
+            $jwtConfig,
             $ini['middlewareUrl'] ?? null,
             $ini['dataDir'] ?? null,
             $ini['myorderDomain'] ?? self::DEFAULT_MYORDER_DOMAIN,
@@ -262,9 +269,9 @@ final class IskladEnv
         return $this->egonDomain;
     }
 
-    public function getEshopBackendUrl(): string
+    public function getJwtConfig(): JwtConfig
     {
-        return $this->eshopBackendUrl;
+        return $this->jwtConfig;
     }
 
     public function getAuthDomain(): string
