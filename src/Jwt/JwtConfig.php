@@ -11,7 +11,7 @@ use RuntimeException;
 final class JwtConfig
 {
     private const DEFAULT_TOKEN_EXPIRE_INTERVAL = 'PT8H';
-    public const CLAIM_DATA = 'products';
+    public const CLAIM_DATA = 'data';
 
     private string $privateKey;
     private string $privateKeyPassphrase;
