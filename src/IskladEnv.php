@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Isklad\MyorderCartWidgetMiddleware;
 
+use Isklad\MyorderCartWidgetMiddleware\Jwt\JwtConfig;
+
 final class IskladEnv
 {
     const DEFAULT_MYORDER_DOMAIN = 'https://myorder.isklad.eu';
@@ -66,6 +68,11 @@ final class IskladEnv
     private string $egonDomain;
 
     /**
+     * Settings for JWT token generation.
+     */
+    private JwtConfig $jwtConfig;
+
+    /**
      * Auth backend.
      */
     private string $authDomain;
@@ -95,6 +102,7 @@ final class IskladEnv
         string $clientId,
         string $clientSecret,
         int $eshopId,
+        JwtConfig $jwtConfig,
         string $middlewareUrl,
         string $dataDir,
         string $myorderDomain = self::DEFAULT_MYORDER_DOMAIN,
@@ -111,6 +119,7 @@ final class IskladEnv
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->eshopId = $eshopId;
+        $this->jwtConfig = $jwtConfig;
         $this->dataDir = $dataDir;
         $this->middlewareUrl = $middlewareUrl;
         // optional
@@ -133,11 +142,17 @@ final class IskladEnv
     public static function fromIniFile(string $filename): self
     {
         $ini = parse_ini_file($filename, false, INI_SCANNER_TYPED);
+        $jwtConfig = new JwtConfig(
+            $ini['privateKey'] ?? '',
+            $ini['privateKeyPassphrase'] ?? '',
+            $ini['tokenExpireInterval'] ?? null,
+        );
 
         $self = new self(
             $ini['clientId'] ?? null,
             $ini['clientSecret'] ?? null,
             $ini['eshopId'] ?? null,
+            $jwtConfig,
             $ini['middlewareUrl'] ?? null,
             $ini['dataDir'] ?? null,
             $ini['myorderDomain'] ?? self::DEFAULT_MYORDER_DOMAIN,
@@ -252,6 +267,11 @@ final class IskladEnv
     public function getEgonDomain(): string
     {
         return $this->egonDomain;
+    }
+
+    public function getJwtConfig(): JwtConfig
+    {
+        return $this->jwtConfig;
     }
 
     public function getAuthDomain(): string
