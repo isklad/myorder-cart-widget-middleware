@@ -84,6 +84,14 @@ php:
 $app->env()->getIni()['googleApiKey']
 ```
 
+### Signing data with private key
+Sign data with private key that can be verified by 3rd party services via public key.
+Example:
+
+```php
+$app->getSigned(['foo' => 'bar'])
+```
+
 ## Customization
 You may want to customize the following items in your ini file:
 
