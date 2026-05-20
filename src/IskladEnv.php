@@ -63,6 +63,11 @@ final class IskladEnv
     private string $myorderDomain;
 
     /**
+     * JS Widget domain.
+     */
+    private string $widgetDomain;
+
+    /**
      * Egon backend.
      */
     private string $egonDomain;
@@ -105,6 +110,7 @@ final class IskladEnv
         JwtConfig $jwtConfig,
         string $middlewareUrl,
         string $dataDir,
+        string $widgetDomain = self::DEFAULT_MYORDER_DOMAIN,
         string $myorderDomain = self::DEFAULT_MYORDER_DOMAIN,
         string $egonDomain = self::DEFAULT_EGON_DOMAIN,
         string $authDomain = self::DEFAULT_AUTH_DOMAIN,
@@ -126,6 +132,7 @@ final class IskladEnv
         $this->keyDeviceId = $keyDeviceId;
         $this->keyDeviceIdentityRequestId = $keyDeviceIdentityRequestId;
         $this->keyCsrfToken = $keyCsrfToken;
+        $this->widgetDomain = $widgetDomain;
         $this->myorderDomain = $myorderDomain;
         $this->egonDomain = $egonDomain;
         $this->authDomain = $authDomain;
@@ -155,6 +162,7 @@ final class IskladEnv
             $jwtConfig,
             $ini['middlewareUrl'] ?? null,
             $ini['dataDir'] ?? null,
+            $ini['widgetDomain'] ?? self::DEFAULT_MYORDER_DOMAIN,
             $ini['myorderDomain'] ?? self::DEFAULT_MYORDER_DOMAIN,
             $ini['egonDomain'] ?? self::DEFAULT_EGON_DOMAIN,
             $ini['authDomain'] ?? self::DEFAULT_AUTH_DOMAIN,
@@ -205,7 +213,7 @@ final class IskladEnv
      */
     public function getWidgetJsUrl(): string
     {
-        return $this->getMyorderDomain() . '/widget/cart/shop/' . $this->getEshopId();
+        return $this->getWidgetDomain() . '/widget/cart/shop/' . $this->getEshopId();
     }
 
     public function getClientId(): string
@@ -257,6 +265,11 @@ final class IskladEnv
     public function getKeyCsrfToken(): string
     {
         return $this->keyCsrfToken;
+    }
+
+    public function getWidgetDomain(): string
+    {
+        return $this->widgetDomain;
     }
 
     public function getMyorderDomain(): string
