@@ -92,6 +92,18 @@ Example:
 $app->getSigned(['foo' => 'bar'])
 ```
 
+If you do not yet have a private/public key pair, you may generate them for example with this script:
+```shell
+# Generate and encrypt the private key with a password
+openssl genrsa -aes256 -out private.pem 4096
+
+# Extract the public key from the generated private key
+openssl rsa -in private.pem -pubout -out public.pem
+
+```
+
+Don't forget to save the new base64 encoded public key (`cat public.pem | base64`) Egon-Fastcheckout settings: https://egon.isklad.com/client.
+
 ## Customization
 You may want to customize the following items in your ini file:
 
