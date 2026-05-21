@@ -112,3 +112,38 @@ You may want to customize the following items in your ini file:
 `keyDeviceIdentityRequestId` - this is the key under which the device-identity-request-id will be stored in session, and also the name of the GET parameter in the callback from device identification.
 
 `keyCsrfToken` - this is the key under which the device-id will be stored in session.
+
+## Configuration in INI file
+### Required
+Widget will not work or will not work fully without these parameters:
+
+`clientId` - your isklad client id.  
+`clientSecret` - your isklad client secret.  
+`eshopId` - your isklad e-shop id.  
+`middlewareUrl` - the URL of the middleware API.  
+`dataDir` - writable directory where the JWT token will be stored.  
+`googleApiKey` - your google API key to use with Google Maps API (address lookup, map..).
+
+### Required for signing data (Fastcheckout cart):
+`privateKey` - your private key to sign JWT token.  
+`privateKeyPassphrase` - your private key passphrase.  
+`tokenExpireInterval` - (optional) how long the JWT token will be valid for, defaults to `PT8H`.
+
+### Optional
+If set, will override defaults. Mostly for development purposes.
+
+#### Session keys
+`keyDeviceId` - (optional) if set, will override the key under which the device-id will be stored in session.  
+`keyDeviceIdentityRequestId` - (optional) if set, will override the key under which the device-identity-request-id will be stored in session.  
+`keyCsrfToken` - (optional) if set, will override the key under which the CSRF token will be stored in session.  
+
+#### Domain overrides
+`widgetDomain` - (optional) if set, will override the domain where the widget is hosted.  
+`myorderDomain` - (optional) if set, will override the domain where MyOrder is hosted.  
+`egonDomain` - (optional) if set, will override the domain where Egon service is hosted.  
+`authDomain` - (optional) if set, will override the domain where Auth service is hosted.
+
+#### Development
+`displayErrors` - (optional, do not use in production) if set to true, middleware will display PHP errors.  
+`disabledCsrfTokenVerification` - (optional, do not use in production) if set to true, middleware will not verify CSRF token.  
+`disabledPopupClose` - (optional, do not use in production) if set to true, middleware will not close popup window used for device identification.  
