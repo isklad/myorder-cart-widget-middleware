@@ -5,6 +5,8 @@ namespace Isklad\MyorderCartWidgetMiddleware\Cart;
 
 final class Cart
 {
+    public string $orderExternalId = '';
+
     /**
      * @var CartProduct[]
      */
