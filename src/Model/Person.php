@@ -9,4 +9,5 @@ final class Person
     public string $surname = '';
     public string $email = '';
     public string $phone = '';
+    public string $phoneRegion = '';
 }
