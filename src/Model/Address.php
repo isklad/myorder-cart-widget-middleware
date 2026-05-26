@@ -14,5 +14,4 @@ final class Address
     public string $streetNumber = '';
     public string $city = '';
     public string $postalCode = '';
-    public string $country = '';
 }
