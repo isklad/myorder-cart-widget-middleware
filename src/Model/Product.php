@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Isklad\MyorderCartWidgetMiddleware\Cart;
+namespace Isklad\MyorderCartWidgetMiddleware\Model;
 
-final class CartProduct
+final class Product
 {
     public string $id = '';
     public string $name = '';
