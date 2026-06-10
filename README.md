@@ -61,15 +61,15 @@ The CSRF token is saved to a session.
 See section [API endpoint](#api-endpoint)
 
 ### Device-id callback handler
-To be able to list and save users' addresses, we must identify the session on the isklad-auth server.
-Since the 3rd party cookies blocking policy is now a standard in browsers, we must do a round-trip to isklad-auth service and back.
-The isklad-auth will redirect back to the client with the device-id in a GET parameter.
+To be able to list and save users' addresses, we must identify the session on the myorder server.
+Since the 3rd party cookies blocking policy is now a standard in browsers, we must do a round-trip to myorder service and back.
+The myorder service will redirect back to the client with the device-id in a GET parameter.
 The device-id is then stored to session and passed to the widget. 
 
 ### Device identification request
-If there is no device-id saved in session, the middleware will create a request for identification of the device via API to isklad-auth server, which will respond with a one-time device-identity-request-id.
-The request contains the callback URL where the auth-server will redirect to with the correct device-id and device-identity-request-id.
-When clicked upon the widget for the first time, it will open a popup window, which will make the round-trip to isklad-auth server with device-identity-request-id, and receive the device-id in GET parameter (see [Device-id callback handler](#device-id-callback-handler)).
+If there is no device-id saved in session, the middleware will create a request for identification of the device via API to myorder server, which will respond with a one-time device-identity-request-id.
+The request contains the callback URL where the myorder service will redirect to with the correct device-id and device-identity-request-id.
+When clicked upon the widget for the first time, it will open a popup window, which will make the round-trip to myorder server with device-identity-request-id, and receive the device-id in GET parameter (see [Device-id callback handler](#device-id-callback-handler)).
 
 ### Provide additional vars from ini
 You may store more than just the vars necessary to instantiate the app in your ini file and then access them as a key=>value array.
