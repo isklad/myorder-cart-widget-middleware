@@ -244,12 +244,12 @@ final class IskladEnv
      */
     public function getIskladApiDeviceIdentityRequestUrl(): string
     {
-        return $this->getAuthDomain() . '/api/client/device-identity-request';
+        return $this->getMyorderDomain() . '/api/sys/device-identity-request';
     }
 
     public function getIskladDeviceIdentificationUrl(string $deviceIdentityRequestId): string
     {
-        return $this->getAuthDomain() . '/web/device/device-identity-request/' . $deviceIdentityRequestId;
+        return $this->getMyorderDomain() . '/device/device-identity-request/' . $deviceIdentityRequestId;
     }
 
     public function getKeyDeviceId(): string
