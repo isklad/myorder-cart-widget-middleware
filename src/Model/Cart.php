@@ -13,6 +13,7 @@ final class Cart
     public array $products = [];
     public string $currency = '';
     public int $weight = 0;
-    public ?Person $person = null;
-    public ?Address $address = null;
+
+    public ?CartUser $seller = null;
+    public ?CartUser $buyer = null;
 }
