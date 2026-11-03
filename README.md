@@ -3,6 +3,8 @@ This middleware service is required for secure communication with isklad service
 
 See the example implementation (and the widget documentation) here: https://github.com/isklad/eshop-one
 
+See the list of isklad APIs used by the widget and the middleware here: [api.md](api.md)
+
 ## Requirements
 - PHP >= 8.2 (required by `lcobucci/jwt` ^5.6)
 - PHP extensions: `curl`, `json`
@@ -103,6 +105,8 @@ The `middleware` service handles these `uri` values itself:
 - `identify-device` - redirects the popup window to device identification on myorder server.
 - `receive-device-identity` - callback from myorder server with the device-id (see [Device-id callback handler](#device-id-callback-handler)).
 - `device-id` - returns the device-id from session as JSON: `{"id": "..."}`.
+
+The list of all APIs called through the endpoint is in [api.md](api.md).
 
 ## What does it do
 ### Manage client auth token
@@ -241,10 +245,10 @@ If set, will override defaults. Mostly for development purposes.
 `keyCsrfToken` - (optional) if set, will override the key under which the CSRF token will be stored in session. Default: `_isklad_csrf_token`.  
 
 #### Domain overrides
-`widgetDomain` - (optional) if set, will override the domain where the widget is hosted. Default: `https://myorder.isklad.eu`.  
-`myorderDomain` - (optional) if set, will override the domain where MyOrder is hosted. Default: `https://myorder.isklad.eu`.  
-`egonDomain` - (optional) if set, will override the domain where Egon service is hosted. Default: `https://api.isklad.eu`.  
-`authDomain` - (optional) if set, will override the domain where Auth service is hosted. Default: `https://auth.isklad.eu`.
+`widgetDomain` - (optional) if set, will override the domain where the widget is hosted. Default: `https://core.prod.myorder.isklad.eu`.  
+`myorderDomain` - (optional) if set, will override the domain where MyOrder is hosted. Default: `https://core.prod.myorder.isklad.eu`.  
+`egonDomain` - (optional) if set, will override the domain where Egon service is hosted. Default: `https://api.isklad.com`.  
+`authDomain` - (optional) if set, will override the domain where Auth service is hosted. Default: `https://auth.isklad.com`.
 
 #### Development
 `displayErrors` - (optional, do not use in production) if set to true, middleware will display PHP errors.  

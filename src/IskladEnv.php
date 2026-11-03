@@ -7,9 +7,9 @@ use Isklad\MyorderCartWidgetMiddleware\Jwt\JwtConfig;
 
 final class IskladEnv
 {
-    const DEFAULT_MYORDER_DOMAIN = 'https://myorder.isklad.eu';
-    const DEFAULT_EGON_DOMAIN = 'https://api.isklad.eu';
-    const DEFAULT_AUTH_DOMAIN = 'https://auth.isklad.eu';
+    const DEFAULT_MYORDER_DOMAIN = 'https://core.prod.myorder.isklad.eu';
+    const DEFAULT_EGON_DOMAIN = 'https://api.isklad.com';
+    const DEFAULT_AUTH_DOMAIN = 'https://auth.isklad.com';
     const DEFAULT_KEY_DEVICE_ID = '_isklad_deviceId';
     const DEFAULT_KEY_DEVICE_IDENTITY_REQUEST_ID = '_isklad_deviceIdentityRequestId';
     const DEFAULT_KEY_CSRF_TOKEN = '_isklad_csrf_token';
