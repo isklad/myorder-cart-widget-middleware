@@ -5,6 +5,8 @@ See the example implementation (and the widget documentation) here: https://gith
 
 See the list of isklad APIs used by the widget and the middleware here: [api.md](api.md)
 
+See how the device (customer's browser) is identified here: [deviceIdRequest.md](deviceIdRequest.md)
+
 ## Requirements
 - PHP >= 8.2 (required by `lcobucci/jwt` ^5.6)
 - PHP extensions: `curl`, `json`
