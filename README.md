@@ -200,6 +200,7 @@ $signedCart = $app->getSigned((array) $cart)->toString();
 - `products` ([`Product`](src/Model/Product.php)[]) - products in the cart.
 - `currency` (string) - 3-letter ISO currency code (i.e. `EUR`), it overrides the widget's `currency-code`.
 - `weight` (int) - weight of the order.
+- `vat` (float) - VAT percentage (i.e. `23`) added to the delivery prices, it overrides the widget's `vat`. The order is created with this VAT.
 - `buyer` ([`CartUser`](src/Model/CartUser.php), optional) - buyer's person and address, used to prefill the checkout.
 - `seller` ([`CartUser`](src/Model/CartUser.php), optional) - seller's person and address (i.e. for `c2c` orders).
 
