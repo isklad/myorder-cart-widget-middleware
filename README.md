@@ -150,11 +150,11 @@ Example:
 
 ini: 
 ```ini
-googleApiKey=yourGoogleApiKey
+myOwnVar=myOwnValue
 ```
 php:
 ```php
-$app->env()->getIni()['googleApiKey']
+$app->env()->getIni()['myOwnVar']
 ```
 
 ### Signing data with private key
@@ -232,7 +232,6 @@ Widget will not work or will not work fully without these parameters:
 `eshopId` - your isklad e-shop id.  
 `middlewareUrl` - the URL of the middleware API.  
 `dataDir` - writable directory where the JWT token will be stored.  
-`googleApiKey` - your google API key to use with Google Maps API (address lookup, map..). Not used by the middleware itself, read it via `$app->env()->getIni()['googleApiKey']`.
 
 ### Required for signing data (Fastcheckout cart):
 `privateKey` - your base64 encoded private key (PEM) to sign JWT token.  

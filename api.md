@@ -91,5 +91,5 @@ device ones above (same functionality, but for the logged-in user):
 
 ## Third-party APIs
 Called by the widget directly from the browser, not through the middleware:
-- Google Maps API (`googleApiKey`) - address autocomplete, geocoding and map.
+- Google Maps API - address autocomplete, geocoding and map. It uses iSklad's API key built into the widget (the e-shop's domain must be allowed by iSklad), the e-shop does not provide a key.
 - Packeta widget API (`https://widget.packeta.com/v6/pps/api/widget/v1/validate`) - Packeta pickup point selection and validation.
