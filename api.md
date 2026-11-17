@@ -81,6 +81,15 @@ device ones above (same functionality, but for the logged-in user):
 | `POST`   | `/api/prv/device-auth-link/{locale}`                                                                                                        | `POST /api/sys/device-auth-link/{locale}`           |
 | `POST`   | `/api/prv/user-order`                                                                                                                       | `POST /api/sys/device-order`                        |
 
+### Called by the e-shop's server
+Not used by the widget. The e-shop's server calls it with the middleware's API client (`$app->getApiClient()->get($url)`, which attaches the client JWT)
+to verify the prices selected in the widget, because the data coming from the browser cannot be trusted.
+See [Verifying the prices on your server](https://github.com/isklad/eshop-one#verifying-the-prices-on-your-server).
+
+| Method | API                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                              |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GET`  | `/api/sys/shop-country-setting/shop/{eshopId}/country/{countryId}/delivery-option/{deliveryOptionId}/order/weight/{weight}/price/{price}/currency/{currencyId}/lead-time/{leadTime}/vat/{vat}` | Returns the same checkout settings as the API without `delivery-option/{deliveryOptionId}` (see [Shop and settings](#shop-and-settings)), only the delivery options are limited to the given one (with its price calculated for the order), or empty when it is not offered for the order. `404` if the shop does not deliver to the country. |
+
 ## egon (`service=egon`)
 
 | Method | API                               | Description                                                                                                                                                          |
